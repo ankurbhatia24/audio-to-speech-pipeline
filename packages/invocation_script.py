@@ -3,13 +3,13 @@ import json
 import os
 import uuid
 
-from ekstep_data_pipelines.audio_analysis.audio_analysis import AudioAnalysis
-from ekstep_data_pipelines.audio_cataloguer.cataloguer import AudioCataloguer
-from ekstep_data_pipelines.audio_embedding.audio_embedding import AudioEmbedding
+# from ekstep_data_pipelines.audio_analysis.audio_analysis import AudioAnalysis
+# from ekstep_data_pipelines.audio_cataloguer.cataloguer import AudioCataloguer
+# from ekstep_data_pipelines.audio_embedding.audio_embedding import AudioEmbedding
 from ekstep_data_pipelines.audio_processing.audio_processer import AudioProcessor
-from ekstep_data_pipelines.audio_transcription.audio_transcription import (
-    AudioTranscription,
-)
+# from ekstep_data_pipelines.audio_transcription.audio_transcription import (
+#     AudioTranscription,
+# )
 from ekstep_data_pipelines.common import get_periperhals
 from ekstep_data_pipelines.common.utils import get_logger
 from ekstep_data_pipelines.data_marker.data_marker import DataMarker
@@ -387,6 +387,7 @@ def perform_action(arguments, **kwargs):
     current_action = arguments.action
 
     curr_processor = None
+    print(current_action)
 
     if current_action == ACTIONS.DATA_MARKING:
         kwargs.update(validate_data_filter_config(arguments))
@@ -394,7 +395,9 @@ def perform_action(arguments, **kwargs):
 
         config_params = {"config_file_path": kwargs.get("config_file_path")}
 
-        object_dict = get_periperhals(config_params, arguments.language)
+        
+
+        # object_dict = get_periperhals(config_params, arguments.language)
 
         data_processor = object_dict.get("data_processor")
         gcs_instance = object_dict.get("gsc_instance")
@@ -407,105 +410,109 @@ def perform_action(arguments, **kwargs):
 
     elif current_action == ACTIONS.AUDIO_PROCESSING:
         kwargs.update(validate_audio_processing_input(arguments))
-        LOGGER.info("Intializing audio processor marker with given config")
+        # LOGGER.info("Intializing audio processor marker with given config")
         config_params = {"config_file_path": kwargs.get("config_file_path")}
+
+        # print(config_params, arguments.language)
 
         object_dict = get_periperhals(config_params, arguments.language)
 
-        data_processor = object_dict.get("data_processor")
-        gcs_instance = object_dict.get("gsc_instance")
-        audio_commons = object_dict.get("audio_commons")
-        catalogue_dao = object_dict.get("catalogue_dao")
+        print(object_dict)
 
-        curr_processor = AudioProcessor.get_instance(
-            data_processor,
-            gcs_instance,
-            audio_commons,
-            catalogue_dao,
-            **{"commons_dict": object_dict, "file_interface": arguments.file_system},
-        )
+        # data_processor = object_dict.get("data_processor")
+        # gcs_instance = object_dict.get("gsc_instance")
+        # audio_commons = object_dict.get("audio_commons")
+        # catalogue_dao = object_dict.get("catalogue_dao")
 
-    elif current_action == ACTIONS.AUDIO_TRANSCRIPTION:
-        kwargs.update(validate_audio_transcription_input(arguments))
-        LOGGER.info("Intializing audio processor marker with given config")
-        config_params = {"config_file_path": kwargs.get("config_file_path")}
+        # curr_processor = AudioProcessor.get_instance(
+        #     data_processor,
+        #     gcs_instance,
+        #     audio_commons,
+        #     catalogue_dao,
+        #     **{"commons_dict": object_dict, "file_interface": arguments.file_system},
+        # )
 
-        object_dict = get_periperhals(config_params, arguments.language)
+    # elif current_action == ACTIONS.AUDIO_TRANSCRIPTION:
+    #     kwargs.update(validate_audio_transcription_input(arguments))
+    #     LOGGER.info("Intializing audio processor marker with given config")
+    #     config_params = {"config_file_path": kwargs.get("config_file_path")}
 
-        data_processor = object_dict.get("data_processor")
-        gcs_instance = object_dict.get("gsc_instance")
-        audio_commons = object_dict.get("audio_commons")
-        catalogue_dao = object_dict.get("catalogue_dao")
+    #     object_dict = get_periperhals(config_params, arguments.language)
 
-        curr_processor = AudioTranscription.get_instance(
-            data_processor,
-            gcs_instance,
-            audio_commons,
-            catalogue_dao,
-            **{"commons_dict": object_dict, "file_interface": arguments.file_system},
-        )
-    elif current_action == ACTIONS.AUDIO_ANALYSIS:
-        kwargs.update(validate_audio_analysis_config(arguments))
-        LOGGER.info("Intializing audio analysis processor with given config")
+    #     data_processor = object_dict.get("data_processor")
+    #     gcs_instance = object_dict.get("gsc_instance")
+    #     audio_commons = object_dict.get("audio_commons")
+    #     catalogue_dao = object_dict.get("catalogue_dao")
 
-        config_params = {"config_file_path": kwargs.get("config_file_path")}
+    #     curr_processor = AudioTranscription.get_instance(
+    #         data_processor,
+    #         gcs_instance,
+    #         audio_commons,
+    #         catalogue_dao,
+    #         **{"commons_dict": object_dict, "file_interface": arguments.file_system},
+    #     )
+    # elif current_action == ACTIONS.AUDIO_ANALYSIS:
+    #     kwargs.update(validate_audio_analysis_config(arguments))
+    #     LOGGER.info("Intializing audio analysis processor with given config")
 
-        object_dict = get_periperhals(config_params, arguments.language)
+    #     config_params = {"config_file_path": kwargs.get("config_file_path")}
 
-        data_processor = object_dict.get("data_processor")
+    #     object_dict = get_periperhals(config_params, arguments.language)
 
-        curr_processor = AudioAnalysis.get_instance(
-            data_processor,
-            **{"commons_dict": object_dict, "file_interface": arguments.file_system},
-        )
-        LOGGER.info("Starting processing for %s", current_action)
+    #     data_processor = object_dict.get("data_processor")
 
-    elif current_action == ACTIONS.AUDIO_CATALOGUER:
-        LOGGER.info("Intializing data AudioCataloguer with given config")
+    #     curr_processor = AudioAnalysis.get_instance(
+    #         data_processor,
+    #         **{"commons_dict": object_dict, "file_interface": arguments.file_system},
+    #     )
+    #     LOGGER.info("Starting processing for %s", current_action)
 
-        config_params = {"config_file_path": kwargs.get("config_file_path")}
+    # elif current_action == ACTIONS.AUDIO_CATALOGUER:
+    #     LOGGER.info("Intializing data AudioCataloguer with given config")
 
-        object_dict = get_periperhals(config_params, arguments.language)
+    #     config_params = {"config_file_path": kwargs.get("config_file_path")}
 
-        data_processor = object_dict.get("data_processor")
+    #     object_dict = get_periperhals(config_params, arguments.language)
 
-        curr_processor = AudioCataloguer.get_instance(data_processor)
-        LOGGER.info("Starting processing for %s", current_action)
-        LOGGER.info(f"Starting processing for {current_action}")
+    #     data_processor = object_dict.get("data_processor")
 
-    elif current_action == ACTIONS.AUDIO_EMBEDDING:
+    #     curr_processor = AudioCataloguer.get_instance(data_processor)
+    #     LOGGER.info("Starting processing for %s", current_action)
+    #     LOGGER.info(f"Starting processing for {current_action}")
 
-        kwargs.update(validate_audio_embedding_config(arguments))
+    # elif current_action == ACTIONS.AUDIO_EMBEDDING:
 
-        LOGGER.info("Intializing data AudioEmbedding with given config")
+    #     kwargs.update(validate_audio_embedding_config(arguments))
 
-        config_params = {"config_file_path": kwargs.get("config_file_path")}
+    #     LOGGER.info("Intializing data AudioEmbedding with given config")
 
-        object_dict = get_periperhals(config_params, arguments.language)
+    #     config_params = {"config_file_path": kwargs.get("config_file_path")}
 
-        data_processor = object_dict.get("data_processor")
+    #     object_dict = get_periperhals(config_params, arguments.language)
 
-        curr_processor = AudioEmbedding.get_instance(data_processor, **{"commons_dict": object_dict,
-                                                                        "file_interface": arguments.file_system})
-        LOGGER.info(f"Starting processing for {current_action}")
+    #     data_processor = object_dict.get("data_processor")
 
-    elif current_action == ACTIONS.ULCA_DATASET:
-        kwargs.update(validate_ulca_dataset_config(arguments))
-        LOGGER.info("Intializing ulca dataset process with given config")
+    #     curr_processor = AudioEmbedding.get_instance(data_processor, **{"commons_dict": object_dict,
+    #                                                                     "file_interface": arguments.file_system})
+    #     LOGGER.info(f"Starting processing for {current_action}")
 
-        config_params = {"config_file_path": kwargs.get("config_file_path")}
+    # elif current_action == ACTIONS.ULCA_DATASET:
+    #     kwargs.update(validate_ulca_dataset_config(arguments))
+    #     LOGGER.info("Intializing ulca dataset process with given config")
 
-        object_dict = get_periperhals(config_params, arguments.language)
+    #     config_params = {"config_file_path": kwargs.get("config_file_path")}
 
-        data_processor = object_dict.get("data_processor")
+    #     object_dict = get_periperhals(config_params, arguments.language)
 
-        curr_processor = ULCADataset.get_instance(
-            data_processor,
-            **{"commons_dict": object_dict, "file_interface": arguments.file_system},
-        )
+    #     data_processor = object_dict.get("data_processor")
 
-    curr_processor.process(**kwargs)
-    LOGGER.info("Ending processing for %s", current_action)
+    #     curr_processor = ULCADataset.get_instance(
+    #         data_processor,
+    #         **{"commons_dict": object_dict, "file_interface": arguments.file_system},
+    #     )
+
+    # curr_processor.process(**kwargs)
+    # LOGGER.info("Ending processing for %s", current_action)
 
 
 if __name__ == "__main__":

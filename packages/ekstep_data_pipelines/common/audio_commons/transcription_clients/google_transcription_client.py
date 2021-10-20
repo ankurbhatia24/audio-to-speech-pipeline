@@ -1,7 +1,7 @@
 import os
 
 from google.cloud import speech_v1
-from google.cloud.speech_v1 import enums
+# from google.cloud.speech_v1 import enums
 from ekstep_data_pipelines.common.audio_commons.transcription_clients.transcription_client_errors import (
     GoogleTranscriptionClientError,
 )
@@ -33,10 +33,18 @@ class GoogleTranscriptionClient(object):
 
     @property
     def config(self):
+        # return {
+        #     "language_code": self.language,
+        #     "sample_rate_hertz": self.sample_rate,
+        #     "encoding": enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        #     "audio_channel_count": self.channels,
+        #     "enable_word_time_offsets": True,
+        #     "enable_automatic_punctuation": False,
+        # }
         return {
             "language_code": self.language,
             "sample_rate_hertz": self.sample_rate,
-            "encoding": enums.RecognitionConfig.AudioEncoding.LINEAR16,
+            "encoding": speech_v1.RecognitionConfig.AudioEncoding.LINEAR16,
             "audio_channel_count": self.channels,
             "enable_word_time_offsets": True,
             "enable_automatic_punctuation": False,

@@ -49,6 +49,7 @@ def create_dag(dag_id, dag_number, default_args, args, batch_count):
         print(args)
         print(f"Language for source is {language}")
         source_path_for_snr_set = interpolate_language_paths(language)
+        print("source_path_for_snr_set: ", source_path_for_snr_set)
 
         get_file_path_from_gcp_bucket = PythonOperator(
             task_id=dag_id + "_get_file_path",
@@ -65,13 +66,16 @@ def create_dag(dag_id, dag_number, default_args, args, batch_count):
         )
 
         get_file_path_from_gcp_bucket
+        print("get_file_path_from_gcp_bucket: ", get_file_path_from_gcp_bucket)
 
         parallelism = args.get("parallelism")
-
+        print("Dag Id: ", dag_id)
         file_path_list = json.loads(Variable.get("audiofilelist"))[dag_id]
+        print("file_path_list : ", file_path_list)
 
         if len(file_path_list) > 0:
-
+            print("In file_path_list_len > 0")
+            print("Parallelism is :", parallelism )
             chunk_size = math.ceil(len(file_path_list) / parallelism)
             batches = [
                 file_path_list[i : i + chunk_size]
@@ -97,10 +101,13 @@ def create_dag(dag_id, dag_number, default_args, args, batch_count):
                 image_pull_policy="Always",
                 resources=resource_limits,
             )
-
+            print("Created Data Prep Cataloguer")
         else:
             batches = []
+            print("In file_path_list_len = 0 ")
 
+
+        print("Image is: ", f"us.gcr.io/{project}/ekstep_data_pipelines:{env_name}_1.0.0")
         for batch_file_path_list in batches:
             data_prep_task = kubernetes_pod_operator.KubernetesPodOperator(
                 task_id=dag_id + "_data_snr_" + batch_file_path_list[0],
@@ -147,7 +154,7 @@ for source in snr_catalogue_source.keys():
     dag_id = source
 
     dag_args = {
-        "email": ["gaurav.gupta@thoughtworks.com"],
+        "email": ["ankur@gan.studio"],
     }
 
     args = {

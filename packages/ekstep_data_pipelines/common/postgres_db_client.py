@@ -92,7 +92,8 @@ class PostgresClient:
             pass
 
         self.db = create_engine(
-            f"postgresql://{db_user}:{db_pass}@{cloud_sql_connection_name}:{port}/{db_name}"
+            # f"postgresql://{db_user}:{db_pass}@{cloud_sql_connection_name}:{port}/{db_name}"
+            f"postgresql://{db_user}:{db_pass}@localhost:{port}/{db_name}"
         )
 
     def execute_query(self, query, **parm_dict):

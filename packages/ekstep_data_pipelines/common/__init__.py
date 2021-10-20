@@ -23,16 +23,24 @@ def get_periperhals(intialization_dict_path, language):
     config_dict = load_config(intialization_dict_path.get("config_file_path"))
 
     config_dict_with_language = get_config_for_given_language(config_dict, language)
+    print(config_dict_with_language)
 
     data_processor = PostgresClient.get_instance(config_dict_with_language)
+    print("DataProcessor: ", data_processor)
+
     gcs_instance = CloudStorageOperations.get_instance(config_dict_with_language)
+    print('GCS_Instance: ', gcs_instance)
+
     catalogue_dao = CatalogueDao(data_processor)
+    print('Catalogue_dao: ', catalogue_dao)
 
     peripheral_dict = {
         "data_processor": data_processor,
         "gsc_instance": gcs_instance,
         "catalogue_dao": catalogue_dao,
     }
+
+    
 
     peripheral_dict["audio_commons"] = get_audio_commons(config_dict_with_language)
     peripheral_dict["infra_commons"] = get_infra_utils(config_dict_with_language)

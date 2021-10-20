@@ -2,14 +2,14 @@
 config:
   common:
     db_configuration:
-        db_name: ''
-        db_pass: ''
-        db_user: ''
-        cloud_sql_connection_name: ''
+        db_name: 'crowdsourcedb-prod'
+        db_pass: 'ankur_access'
+        db_user: 'postgres'
+        cloud_sql_connection_name: 'savvy-primacy-324818:us-central1:crowdsourcedb-prod'
 
     gcs_config:
       # master data bucket for ekstep
-      master_bucket: ''
+      master_bucket: 'ekstep-scraper'
 
     azure_transcription_client:
       speech_key: ''
@@ -39,60 +39,55 @@ config:
 
   audio_processor_config:
 
-    feat_language_identification: False
+    feat_language_identification: false
     # defaults to hi-IN
-    language: ''
+    language: 'hi-IN'
 
     # path of the files on gcs which need to be processed
-    remote_raw_audio_file_path: ''
+    remote_raw_audio_file_path: 'ekstep-scraper-prod/data/raw_audio/hindi/audio'
 
-    snr_done_folder_path: ''
+    snr_done_folder_path: 'ekstep-scraper/data/audio_to_speech/snr_done/hindi'
 
     # path where the processed files need to be uploaded
-    remote_processed_audio_file_path: ''
+    remote_processed_audio_file_path: 'ekstep-scraper/data/audio_to_speech/audio_processor_config/processed_files/hindi'
 
     # path where Duplicate files need to be uploaded
-    duplicate_audio_file_path: ''
+    duplicate_audio_file_path: 'ekstep-scraper/data/audio_to_speech/duplicate/hindi'
 
     chunking_conversion_configeration:
-      aggressiveness: ''
-      max_duration: ''
+      aggressiveness: 2
+      max_duration: 5
 
     # SNR specific configeration
     snr_configeration:
 
-      max_snr_threshold: ''
+      max_snr_threshold: 30
       local_input_file_path: ''
       local_output_file_path: ''
 
-  audio_transcription_config:
-    # defaults to hi-IN
-    language: ''
+  # audio_transcription_config:
+  #   # defaults to hi-IN
+  #   language: ''
 
-    # path of the files on gcs which need to be processed for stt
-    remote_clean_audio_file_path: ''
+  #   # path of the files on gcs which need to be processed for stt
+  #   remote_clean_audio_file_path: ''
 
-    # path where the processed files need to be uploaded
-    remote_stt_audio_file_path: ''
+  #   # path where the processed files need to be uploaded
+  #   remote_stt_audio_file_path: ''
 
-  audio_analysis_config:
+  # audio_analysis_config:
 
-    language: ''
+  #   language: 'hi-IN'
 
-    analysis_options:
-      gender_analysis: 1
-      speaker_analysis: 1
+  #   analysis_options:
+  #     gender_analysis: 1
+  #     speaker_analysis: 1
 
-    # path where the processed files need to be uploaded
-    remote_processed_audio_file_path: ''
+  #   # path where the processed files need to be uploaded
+  #   remote_processed_audio_file_path: 'ekstep-scraper/data/audio_to_speech/audio_analysis_config/processed_files/hindi'
 
-    speaker_analysis_config:
-      min_cluster_size: 4
-      partial_set_size: 500
-      fit_noise_on_similarity: 0.77
-      min_samples: 2
-
-
-
-
-
+  #   speaker_analysis_config:
+  #     min_cluster_size: 4
+  #     partial_set_size: 500
+  #     fit_noise_on_similarity: 0.77
+  #     min_samples: 2
